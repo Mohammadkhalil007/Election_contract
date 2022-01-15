@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.7.0;
+ contract DappElection{
+     uint public candidateCount;
+      mapping (uint =>candidate) public candidates;
+      mapping (address => bool) public votedOrNot;
+      event electionUpdate(uint id,string name ,uint votecount);
+     
+     struct candidate{
+         uint id;
+         string name;
+         uint voteCount;       
+     }
+  constructor(){
+     addCandidate("nawazShreef");
+     addCandidate("ImranKhan");
+  }
+  function addCandidate(string memory name)private{
+      candidateCount++;
+      candidates[candidateCount]=candidate(candidateCount,name,0);
+  }
+  function vote(uint _id)public{
+   require(!votedOrNot[msg.sender], 'you have voted for the participant');
+   require(candidates[_id].id !=0, 'the id doesnt exist');
+   candidates[_id].voteCount+=1;
+   votedOrNot[msg.sender]=true;
+   emit electionUpdate(_id,candidates[_id].name,candidates[_id].voteCount);
+  }
+ }
